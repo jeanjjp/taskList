@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+
+	<title>Task List</title>
+
+	<!-- CSS  -->
+	<link href="#{request.contextPath}/css/style.css" rel="stylesheet"
+		media="screen" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		rel="stylesheet" />
+	<link type="text/css" rel="stylesheet"
+		href="#{request.contextPath}/css/materialize.min.css"
+		media="screen,projection" />
+
+</h:head>
+
+<h:body>
+
+	<!-- header -->
+	<div class="row">
+		<div class="container">
+		
+			<!-- titulo -->
+			<div class="col s12">
+				<h5 class="light center">Task List</h5>
+			</div>
+			
+			<!-- botao de add -->
+			<div class="col s12 m12">
+				<div class="col s12 m3">
+					<br /> <a class="modal-trigger btn red darken-1 col s12"
+						href="#modal-add"><i class="material-icons left">create</i>Nova
+						Task</a>
+				</div>
+
+				<!-- input de pesquisa -->
+				<h:form>
+					<div class="col s12 m6">
+						<div class="input-field col s12">
+							<h:inputText id="procurar" autocomplete="false"
+								value="#{taskController.palavraChave}" />
+							<label class="center" for="procurar">Palavra Chave</label>
+						</div>
+					</div>
+					
+					<!-- Botao pesquisar -->
+					<div class="col s12 m3">
+						<br />
+						<h:commandButton type="submit" class="btn red darken-1 col s12"
+							value="Procurar" action="#{taskController.listarTasks}"></h:commandButton>
+							
+							
+					
+					</div>
+				</h:form>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Janela modal para add nova task -->
+	<div id="modal-add" class="modal">
+		<div class="modal-content">
+			<h4 class="light center">Nova Task</h4>
+			<div class="row">
+				<h:form class="col s12">
+					<div class="row">
+					
+					<!-- input da task -->
+						<div class="input-field col s12">
+							<i class="material-icons prefix">edit</i>
+							<h:inputText id="titulo"
+								validatorMessage="Digite um título com mais de 2 caracteres"
+								requiredMessage="Digite um título com mais de 2 caracteres"
+								required="true" autocomplete="false"
+								value="#{taskController.task.tituloTask}">
+								<f:validateLength minimum="2"></f:validateLength>
+							</h:inputText>
+							<label for="titulo"
+								data-error="Digite um título com mais de 2 caracteres"
+								data-success="OK.">Título</label>
+						</div>
+
+						<!-- input da task -->
+						<div class="input-field col s12">
+							<i class="material-icons prefix">edit</i>
+							<h:inputText id="descricao"
+								validatorMessage="Digite uma descricao com mais de 4 caracteres"
+								requiredMessage="Digite uma descricao com mais de 4 caracteres"
+								required="true" autocomplete="false"
+								value="#{taskController.task.descricaoTask}">
+								<f:validateLength minimum="4"></f:validateLength>
+							</h:inputText>
+							<label for="descricao"
+								data-error="Digite uma descricao com mais de 4 caracteres"
+								data-success="OK.">Descrição</label>
+						</div>
+
+					</div>
+					
+					<!-- Botao e TOAST para informacoes -->
+					<p:growl id="growl" showDetail="false" sticky="false" life="3500" />
+					<h:commandButton id="botao" type="submit"
+						class="btn modal-trigger red darken-1 col s12" value="Cadastrar"
+						action="#{taskController.cadastrarOuAlterarTask}"></h:commandButton>
+				</h:form>
+			</div>
+		</div>
+	</div>
+
+	<!-- Tabela de tasks -->
+	<div class="row">
+		<div class="container">
+			<div class="col s12 m12">
+				<h:dataTable value="#{taskController.taskList}" var="task"
+					class="responsive-table striped centered">
+					<h:column>
+						<f:facet name="header">Título</f:facet>
+						<h:outputText value="#{task.tituloTask}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Descrição</f:facet>
+						<h:outputText value="#{task.descricaoTask}">
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Status</f:facet>
+						<h:outputText rendered="#{task.statusTask == 0}"
+							value="Em Andamento" class="red-text" />
+
+						<h:outputText rendered="#{task.statusTask == 1}" value="Concluído"
+							class="green-text" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Data criação</f:facet>
+						<h:outputText value="#{task.dataCriacao}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</h:column>
+
+					<!-- botao para edicaoo de task -->
+					<h:column>
+						<h:form>
+
+							<h:commandButton value="EDITAR"
+								action="#{taskController.editarTask}"
+								styleClass="btn red darken-1 col s9 m9">
+								<f:setPropertyActionListener value="#{task}"
+									target="#{taskController.task}"></f:setPropertyActionListener>
+								<br />
+							</h:commandButton>
+
+						</h:form>
+					</h:column>
+
+					<!-- botao para confirmacao de exclusão de task -->
+					<h:column>
+						<h:form>
+							<h:commandButton value="Deletar"
+								action="#{taskController.deletaraTask}"
+								styleClass="btn red darken-1 col s9 m9">
+								<f:setPropertyActionListener value="#{task}"
+									target="#{taskController.task}"></f:setPropertyActionListener>
+							</h:commandButton>
+
+						</h:form>
+					</h:column>
+				</h:dataTable>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<!--  SCRIPTS-->
+	<script type="text/javascript"
+		src="#{request.contextPath}/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript"
+		src="#{request.contextPath}/js/materialize.min.js"></script>
+	<script type="text/javascript" src="#{request.contextPath}/js/init.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('.modal').modal();
+		});
+	</script>
+	<!--  /SCRIPTS -->
+
+</h:body>
+</html>

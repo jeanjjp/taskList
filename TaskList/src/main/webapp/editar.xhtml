@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+
+	<title>Task List</title>
+
+	<!-- CSS  -->
+	<link href="#{request.contextPath}/css/style.css" rel="stylesheet"
+		media="screen" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		rel="stylesheet" />
+	<link type="text/css" rel="stylesheet"
+		href="#{request.contextPath}/css/materialize.min.css"
+		media="screen,projection" />
+
+</h:head>
+
+<h:body>
+
+
+	<h4 class="light center">Editar Task</h4>
+	<div class="container">
+	
+		<!-- botao voltar -->
+		<div class="row">
+			<a class="btn modal-trigger red darken-1 col s2 m1" href="index.xhtml"><i class="material-icons left">keyboard_arrow_left</i></a>
+			
+			<!-- Task a ser editada -->
+			<h:form class="col s12">
+				<div class="row">
+				<br/>
+				
+					<!-- input da task -->
+					<div class="input-field col s12">
+						<i class="material-icons prefix">edit</i>
+						<h:inputText id="titulo"
+							validatorMessage="Digite um título com mais de 2 caracteres"
+							requiredMessage="Digite um título com mais de 2 caracteres"
+							required="true" autocomplete="false"
+							value="#{taskController.task.tituloTask}">
+							<f:validateLength minimum="2"></f:validateLength>
+						</h:inputText>
+						<label for="titulo"
+							data-error="Digite um título com mais de 2 caracteres"
+							data-success="OK.">Título</label>
+					</div>
+
+					<!-- input da task -->
+					<div class="input-field col s12">
+						<i class="material-icons prefix">edit</i>
+						<h:inputText id="descricao"
+							validatorMessage="Digite uma descricao com mais de 4 caracteres"
+							requiredMessage="Digite uma descricao com mais de 4 caracteres"
+							required="true" autocomplete="false"
+							value="#{taskController.task.descricaoTask}">
+							<f:validateLength minimum="4"></f:validateLength>
+						</h:inputText>
+						<label for="descricao"
+							data-error="Digite uma descricao com mais de 4 caracteres"
+							data-success="OK.">Descrição</label>
+					</div>
+
+					<!-- radio button da task -->
+					Situação da Task:
+					<h:selectOneRadio value="#{taskController.task.statusTask}">
+						<f:selectItem itemValue="0" itemLabel="Em andamento" />
+						<f:selectItem itemValue="1" itemLabel="Concluído" />
+					</h:selectOneRadio>
+					
+					<!-- ID da task -->
+					<h:inputHidden value="#{taskController.task.idTask}"></h:inputHidden>
+
+				</div>
+				
+				<!-- Botao  Toast -->
+				<p:growl id="growl" showDetail="false" sticky="false" life="3500" />
+				<h:commandButton id="botao" type="submit"
+					class="btn modal-trigger red darken-1 col s12" value="EDITAR"
+					action="#{taskController.cadastrarOuAlterarTask}">
+				</h:commandButton>
+			</h:form>
+		</div>
+	</div>
+
+	<!--  SCRIPTS-->
+	<script type="text/javascript"
+		src="#{request.contextPath}/js/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript"
+		src="#{request.contextPath}/js/materialize.min.js"></script>
+	<script type="text/javascript" src="#{request.contextPath}/js/init.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('.modal').modal();
+		});
+	</script>
+	<!--  /SCRIPTS -->
+
+</h:body>
+</html>
